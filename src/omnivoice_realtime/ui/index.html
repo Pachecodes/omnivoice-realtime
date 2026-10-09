@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1018">
+  <title>OmniVoice Studio</title>
+  <link rel="stylesheet" href="/ui/styles.css">
+</head>
+<body>
+  <!-- Motion is reduced through prefers-reduced-motion in styles.css. -->
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/ui" aria-label="OmniVoice Studio">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+        <span><strong>OmniVoice</strong><small>Studio</small></span>
+      </a>
+      <nav class="studio-nav" aria-label="Modos de Studio">
+        <span aria-current="page">Studio</span>
+        <a href="/ui/pro">Modo Pro <b>→</b></a>
+      </nav>
+      <div class="service-state" id="serviceState"><span></span><b>Conectando</b></div>
+    </header>
+
+    <main>
+      <section class="intro">
+        <div>
+          <p class="eyebrow">Integración OmniVoice · clonación con consentimiento</p>
+          <h1>Dirige la voz.<br><em>Escucha el resultado.</em></h1>
+        </div>
+        <p class="intro-copy">Un espacio privado para clonar voces, corregir pronunciaciones y producir narraciones sin salir de tu red.</p>
+      </section>
+
+      <section class="workspace" aria-label="Generador de voz">
+        <div class="composer panel">
+          <div class="panel-head">
+            <div>
+              <span class="step">01</span>
+              <h2>Texto y dirección</h2>
+            </div>
+            <span class="char-count" id="charCount">0 caracteres</span>
+          </div>
+
+          <div class="preset-row" aria-label="Presets de narración">
+            <button class="preset active" type="button" data-preset="natural">Natural</button>
+            <button class="preset" type="button" data-preset="promo">Promo rápida</button>
+            <button class="preset" type="button" data-preset="calm">Calma</button>
+          </div>
+
+          <label class="field text-field">
+            <span>Guion</span>
+            <textarea id="text" rows="10" placeholder="Escribe lo que quieres escuchar…">La inteligencia artificial puede ayudarte a crear más, en menos tiempo.</textarea>
+          </label>
+
+          <div class="pronunciation-card">
+            <div>
+              <span class="label">Pronunciación</span>
+              <strong>Español latino · Tecnología</strong>
+              <small>ChatGPT se leerá “Chat, ge pe te” y la IA se expandirá automáticamente.</small>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="pronunciation" checked>
+              <span aria-hidden="true"></span>
+              <b class="sr-only">Activar pronunciación tecnológica</b>
+            </label>
+          </div>
+          <button class="text-button" id="previewText" type="button">Ver texto preparado</button>
+          <div class="prepared-text" id="preparedText" hidden></div>
+        </div>
+
+        <aside class="controls panel">
+          <div class="panel-head">
+            <div><span class="step">02</span><h2>Voz y ritmo</h2></div>
+          </div>
+
+          <div class="mode-tabs" role="tablist" aria-label="Modo de voz">
+            <button class="mode active" type="button" data-mode="clone">Clonada</button>
+            <button class="mode" type="button" data-mode="auto">Automática</button>
+            <button class="mode" type="button" data-mode="design">Diseñada</button>
+          </div>
+
+          <label class="field" id="voiceField">
+            <span>Voz registrada</span>
+            <select id="voice"><option value="">Cargando voces…</option></select>
+          </label>
+
+          <label class="field">
+            <span>Dirección compatible</span>
+            <input id="instruct" value="female, young adult, moderate pitch" placeholder="female, young adult, moderate pitch">
+            <small>OmniVoice acepta edad, género, tono, susurro y acento.</small>
+          </label>
+
+          <div class="slider-field">
+            <div><span>Velocidad</span><output id="speedValue">1.08×</output></div>
+            <input id="speed" type="range" min="0.80" max="1.30" step="0.01" value="1.08">
+            <div class="range-labels"><span>Íntima</span><span>Ágil</span></div>
+          </div>
+
+          <details>
+            <summary>Ajustes avanzados</summary>
+            <div class="advanced-grid">
+              <label class="field"><span>Pasos</span><select id="steps"><option>16</option><option selected>32</option><option>48</option><option>64</option></select></label>
+              <label class="field"><span>Guidance</span><input id="guidance" type="number" min="0" max="4" step="0.1" value="2.0"></label>
+              <label class="field"><span>Padding</span><input id="padding" type="number" min="0" max="1" step="0.01" value="0.05"></label>
+              <label class="field"><span>Fade</span><input id="fade" type="number" min="0" max="1" step="0.01" value="0.05"></label>
+            </div>
+            <label class="check"><input id="normalize" type="checkbox" checked><span>Normalizar números, fechas y monedas</span></label>
+          </details>
+
+          <button class="generate" id="generate" type="button"><span>Generar audio</span><i aria-hidden="true">→</i></button>
+          <p class="error" id="error" role="alert" hidden></p>
+        </aside>
+      </section>
+
+      <section class="output panel" id="output" hidden>
+        <div class="output-meta">
+          <span class="step">03</span>
+          <div><h2>Resultado</h2><p id="metrics">Listo para escuchar</p></div>
+        </div>
+        <div class="transport">
+          <audio id="audio" controls></audio>
+          <a id="download" class="download" download="omnivoice-studio.wav">Descargar WAV</a>
+        </div>
+      </section>
+
+      <section class="library panel">
+        <div class="panel-head library-head">
+          <div><span class="step">Voces</span><h2>Biblioteca privada</h2></div>
+          <button class="text-button" id="toggleClone" type="button">Clonar una voz</button>
+        </div>
+        <div class="voice-grid" id="voiceGrid"><p class="muted">Cargando voces registradas…</p></div>
+        <form class="clone-form" id="cloneForm" hidden>
+          <div class="form-grid">
+            <label class="field"><span>ID de la voz</span><input name="voice_id" required pattern="[A-Za-z0-9._-]+" placeholder="nombre_promo_es"></label>
+            <label class="field"><span>Etiqueta</span><input name="label" placeholder="Nombre visible"></label>
+          </div>
+          <label class="field"><span>Audio de referencia · ideal 3–10 segundos</span><input name="ref_audio" type="file" accept="audio/*" required></label>
+          <label class="field"><span>Transcripción · automática si la dejas vacía</span><textarea name="ref_text" rows="3" placeholder="OmniVoice usará Whisper Small para extraer lo dicho…"></textarea></label>
+          <input name="language" type="hidden" value="Spanish">
+          <button class="secondary" type="submit">Registrar voz</button>
+          <p class="form-status" id="cloneStatus" role="status"></p>
+        </form>
+      </section>
+    </main>
+
+    <footer><span>OmniVoice 0.2.1</span><a href="/docs">API Docs</a><span>Solo acceso local</span></footer>
+  </div>
+  <script src="/ui/app.js" defer></script>
+</body>
+</html>

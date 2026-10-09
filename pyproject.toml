@@ -1,0 +1,44 @@
+[project]
+name = "omnivoice-realtime"
+version = "0.3.0"
+description = "Local REST/WebSocket integration and Studio for the upstream OmniVoice model"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md", "licenses/*.txt"]
+authors = [{name = "Jesús Pacheco / Akitá — integration only"}]
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.115.0",
+  "uvicorn[standard]>=0.30.0",
+  "pydantic>=2.8.0",
+  "numpy>=1.26.0",
+  "soundfile>=0.12.1",
+  "python-multipart>=0.0.32",
+  "anyio>=4.0",
+]
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+omnivoice_realtime = ["ui/*.html", "ui/*.css", "ui/*.js", "ui/pro/*.html", "ui/pro/*.css", "ui/pro/*.js"]
+
+[project.optional-dependencies]
+omnivoice = [
+  "omnivoice>=0.2.1,<0.3",
+]
+dev = [
+  "pytest>=8.0.0",
+  "httpx>=0.27.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100

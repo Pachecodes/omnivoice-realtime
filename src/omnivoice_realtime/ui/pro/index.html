@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090c12">
+  <title>OmniVoice Pro</title>
+  <link rel="stylesheet" href="/ui/pro/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/ui/pro" aria-label="OmniVoice Pro">
+        <span class="brand-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+        <span><strong>OmniVoice</strong><small>Pro Workbench</small></span>
+      </a>
+      <nav class="mode-nav" aria-label="Modos de Studio">
+        <a href="/ui">Studio</a>
+        <span aria-current="page">Modo Pro</span>
+      </nav>
+      <div class="service" id="serviceState"><span></span><b>Conectando</b></div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="kicker">Control completo de inferencia · OmniVoice 0.2.1</p>
+          <h1>OmniVoice <em>Pro</em></h1>
+        </div>
+        <p>Clona, diseña y produce voces con acceso a todos los parámetros de generación, lotes y pronunciación personalizada.</p>
+      </section>
+
+      <section class="workbench">
+        <div class="script-panel panel">
+          <div class="section-head">
+            <div><span class="index">01</span><div><p>Composición</p><h2>Texto de entrada</h2></div></div>
+            <span class="counter" id="charCount">0 caracteres</span>
+          </div>
+
+          <div class="segmented" id="jobMode" role="tablist" aria-label="Tipo de generación">
+            <button class="active" type="button" data-job="single">Generación individual</button>
+            <button type="button" data-job="batch">Generación por lote</button>
+          </div>
+
+          <label class="field script-field">
+            <span id="scriptLabel">Guion</span>
+            <textarea id="text" rows="12" placeholder="Escribe el guion que quieres producir…">La inteligencia artificial puede ayudarte a crear más, en menos tiempo.</textarea>
+            <small id="scriptHint">Puedes incluir pausas, puntuación expresiva y marcadores no verbales compatibles.</small>
+          </label>
+
+          <div class="pronunciation">
+            <div class="pronunciation-head">
+              <div><p>Diccionario de pronunciación</p><small>Reemplazos deterministas antes de sintetizar.</small></div>
+              <button class="ghost" id="addPronunciation" type="button">+ Añadir término</button>
+            </div>
+            <label class="toggle-line"><input id="latamProfile" type="checkbox" checked><span>Perfil español latino · tecnología</span></label>
+            <div id="dictionary" class="dictionary">
+              <div class="dictionary-row">
+                <input class="written" aria-label="Texto escrito" placeholder="Texto escrito" value="Akita AI">
+                <span aria-hidden="true">→</span>
+                <input class="spoken" aria-label="Pronunciación" placeholder="Cómo debe sonar" value="Akitá ei ai">
+                <button type="button" class="remove-term" aria-label="Eliminar término">×</button>
+              </div>
+            </div>
+            <div class="pronunciation-actions">
+              <button class="ghost" id="previewText" type="button">Previsualizar texto hablado</button>
+              <span id="replacementCount"></span>
+            </div>
+            <div class="prepared" id="preparedText" hidden></div>
+          </div>
+        </div>
+
+        <aside class="control-panel panel">
+          <div class="section-head compact">
+            <div><span class="index">02</span><div><p>Motor</p><h2>Parámetros</h2></div></div>
+            <button class="reset" id="resetControls" type="button">Restablecer</button>
+          </div>
+
+          <div class="control-group">
+            <h3>Fuente de voz</h3>
+            <div class="segmented three" id="voiceMode" role="tablist" aria-label="Modo de voz">
+              <button class="active" type="button" data-mode="clone">Clonada</button>
+              <button type="button" data-mode="auto">Automática</button>
+              <button type="button" data-mode="design">Diseñada</button>
+            </div>
+            <label class="field" id="voiceField"><span>Voz registrada</span><select id="voice"><option value="">Cargando…</option></select></label>
+            <div class="two-col">
+              <label class="field"><span>Idioma</span><input id="language" list="languages" value="Spanish"><datalist id="languages"><option value="Spanish"><option value="English"><option value="French"><option value="Portuguese"><option value="Italian"><option value="German"><option value="Japanese"><option value="Korean"><option value="Mandarin"><option value="Arabic"></datalist></label>
+              <label class="field"><span>Formato</span><select id="format"><option value="wav">WAV · PCM 16</option><option value="pcm16">PCM16 crudo</option></select></label>
+            </div>
+            <label class="field"><span>Dirección de voz</span><input id="instruct" value="female, young adult, moderate pitch" placeholder="gender, age, pitch, accent, whisper"><small>Edad, género, tono, susurro y acento compatible.</small></label>
+          </div>
+
+          <details class="control-group" open>
+            <summary>Tiempo y calidad</summary>
+            <div class="two-col controls-grid">
+              <label class="field"><span>Duración objetivo</span><input id="duration" type="number" min="0.1" max="120" step="0.1" placeholder="Automática"></label>
+              <label class="field"><span>Velocidad</span><input id="speed" type="number" min="0.21" max="3" step="0.01" value="1.00"></label>
+              <label class="field"><span>Pasos de inferencia</span><input id="steps" type="number" min="4" max="64" step="1" value="32"></label>
+              <label class="field"><span>Guidance scale</span><input id="guidance" type="number" min="0" max="4" step="0.1" value="2.0"></label>
+            </div>
+          </details>
+
+          <details class="control-group">
+            <summary>Muestreo avanzado</summary>
+            <div class="two-col controls-grid">
+              <label class="field"><span>T shift</span><input id="tShift" type="number" min="0" max="1" step="0.01" value="0.10"></label>
+              <label class="field"><span>Temperatura de posición</span><input id="positionTemperature" type="number" min="0" max="20" step="0.1" value="5.0"></label>
+              <label class="field"><span>Temperatura de clase</span><input id="classTemperature" type="number" min="0" max="5" step="0.1" value="0.0"></label>
+              <label class="field"><span>Penalidad por capa</span><input id="layerPenalty" type="number" min="0" max="20" step="0.1" value="5.0"></label>
+            </div>
+          </details>
+
+          <details class="control-group">
+            <summary>Audio y segmentación</summary>
+            <div class="two-col controls-grid">
+              <label class="field"><span>Padding</span><input id="padding" type="number" min="0" max="2" step="0.01" value="0.10"></label>
+              <label class="field"><span>Fade</span><input id="fade" type="number" min="0" max="2" step="0.01" value="0.10"></label>
+              <label class="field"><span>Duración de chunk</span><input id="chunkDuration" type="number" min="0.1" max="120" step="0.1" value="15"></label>
+              <label class="field"><span>Umbral de chunk</span><input id="chunkThreshold" type="number" min="0.1" max="600" step="0.1" value="30"></label>
+            </div>
+          </details>
+
+          <div class="switch-grid control-group">
+            <label><input id="preprocess" type="checkbox" checked><span>Preprocesar prompt</span></label>
+            <label><input id="postprocess" type="checkbox" checked><span>Posprocesar audio</span></label>
+            <label><input id="denoise" type="checkbox" checked><span>Denoise</span></label>
+            <label><input id="normalize" type="checkbox" checked><span>Normalizar texto</span></label>
+          </div>
+
+          <details class="request-preview">
+            <summary>Vista previa de solicitud JSON</summary>
+            <pre id="jsonPreview"></pre>
+          </details>
+          <button class="generate" id="generate" type="button"><span>Ejecutar generación</span><i>⌁</i></button>
+          <p class="error" id="error" role="alert" hidden></p>
+        </aside>
+      </section>
+
+      <section class="results panel" id="results" hidden>
+        <div class="section-head">
+          <div><span class="index">03</span><div><p>Salida</p><h2>Resultados</h2></div></div>
+          <span class="run-meta" id="runMeta"></span>
+        </div>
+        <div id="resultList" class="result-list"></div>
+      </section>
+
+      <section class="voice-lab panel" id="voiceLab">
+        <div class="section-head">
+          <div><span class="index">04</span><div><p>Identidad</p><h2>Laboratorio de voz</h2></div></div>
+          <span class="voice-count" id="voiceCount">0 voces</span>
+        </div>
+        <div class="lab-grid">
+          <form id="cloneForm" class="clone-card">
+            <h3>Clonar una voz</h3>
+            <p>Usa una referencia limpia de 3–10 segundos; OmniVoice transcribirá el audio automáticamente.</p>
+            <div class="two-col">
+              <label class="field"><span>ID de voz</span><input name="voice_id" required pattern="[A-Za-z0-9._-]+" placeholder="yamill_promo_es"></label>
+              <label class="field"><span>Etiqueta</span><input name="label" placeholder="Yamill · Promo"></label>
+            </div>
+            <label class="upload-zone"><input name="ref_audio" type="file" accept="audio/*" required><strong>Seleccionar audio de referencia</strong><small id="fileName">WAV, MP3, M4A, OGG, FLAC o AAC</small></label>
+            <div class="asr-card">
+              <span class="asr-dot"></span>
+              <div><strong>Transcripción automática</strong><small>Whisper Small extraerá lo dicho del audio. No tienes que escribirlo.</small></div>
+            </div>
+            <details class="manual-transcript">
+              <summary>Corregir la transcripción manualmente · opcional</summary>
+              <label class="field"><span>Texto exacto</span><textarea name="ref_text" rows="4" placeholder="Déjalo vacío para usar el ASR automático…"></textarea></label>
+            </details>
+            <div class="two-col">
+              <label class="field"><span>Idioma</span><input name="language" value="Spanish"></label>
+              <label class="field"><span>Notas</span><input name="notes" placeholder="Promo, IVR, narración…"></label>
+            </div>
+            <button class="clone-button" type="submit">Crear y precargar voz</button>
+            <p class="clone-status" id="cloneStatus" role="status"></p>
+          </form>
+          <div class="library-card">
+            <div class="library-head"><div><h3>Biblioteca privada</h3><p>Selecciona una voz para llevarla al motor.</p></div><button class="ghost" id="refreshVoices" type="button">Actualizar</button></div>
+            <div class="voice-list" id="voiceList"><p class="muted">Cargando voces…</p></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer><span>OmniVoice Pro · inference completo</span><a href="/docs">API Docs</a><span>Servicio local · acceso restringido</span></footer>
+  </div>
+  <script src="/ui/pro/app.js" defer></script>
+</body>
+</html>

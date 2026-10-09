@@ -1,0 +1,6 @@
+include LICENSE README.md THIRD_PARTY_NOTICES.md SECURITY.md CONTRIBUTING.md .env.example
+recursive-include licenses *.txt
+recursive-include src/omnivoice_realtime/ui *.html *.css *.js
+recursive-include tests *.py
+recursive-include scripts *.py
+exclude uv.lock
